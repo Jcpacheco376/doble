@@ -376,6 +376,13 @@ func teleport(to_global_position: Vector3) -> void:
 	reset_interpolation()
 
 
+## Returns the transform of a specific Mario limb (indices 0 to 20).
+func get_limb_transform(limb_id: int) -> Transform3D:
+	if _id < 0:
+		return Transform3D()
+	return LibSM64.get_limb_transform(_id, limb_id)
+
+
 ## Set angle of mario in the [code]libsm64[/code] world.
 func set_angle(to_global_rotation: Quaternion) -> void:
 	if _id < 0:
