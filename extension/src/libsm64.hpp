@@ -7,6 +7,8 @@
 #include <godot_cpp/classes/object.hpp>
 
 #include <godot_cpp/variant/callable.hpp>
+#include <godot_cpp/variant/basis.hpp>
+#include <godot_cpp/variant/transform3d.hpp>
 
 #include <libsm64.h>
 
@@ -1458,6 +1460,8 @@ public:
 	void mario_interact_cap(int32_t p_mario_id, godot::BitField<MarioFlags> p_cap_flag, double p_cap_time = 0.0, bool p_play_music = true);
 	// extern SM64_LIB_FN void sm64_mario_extend_cap(int32_t marioId, uint16_t capTime);
 	void mario_extend_cap(int32_t p_mario_id, double p_cap_time);
+	// extern SM64_LIB_FN void sm64_mario_get_limb_transform( int32_t marioId, int32_t limbId, struct SM64LimbTransform *outTransform );
+	godot::Transform3D mario_get_limb_transform(int32_t p_mario_id, int32_t p_limb_id);
 	// extern SM64_LIB_FN bool sm64_mario_attack(int32_t marioId, float x, float y, float z, float hitboxHeight);
 	void mario_attack(int32_t p_mario_id, const godot::Vector3 &p_position, godot::real_t p_hitbox_height);
 

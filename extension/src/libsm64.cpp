@@ -451,6 +451,25 @@ void LibSM64::mario_extend_cap(int32_t p_mario_id, double p_cap_time) {
 	sm64_mario_extend_cap(p_mario_id, static_cast<uint16_t>(p_cap_time / tick_delta_time));
 }
 
+godot::Transform3D LibSM64::mario_get_limb_transform(int32_t p_mario_id, int32_t p_limb_id) {
+	godot::Transform3D t;
+	ERR_FAIL_COND_V(p_mario_id < 0, t);
+	ERR_FAIL_COND_V(p_limb_id < 0 || p_limb_id >= 21, t);
+
+	struct SM64LimbTransform raw_t;
+	sm64_mario_get_limb_transform(p_mario_id, p_limb_id, &raw_t);
+
+	t.basis = godot::Basis(
+		godot::Vector3(raw_t.rotationMatrix[2][2], -raw_t.rotationMatrix[2][1], -raw_t.rotationMatrix[2][0]),
+		godot::Vector3(-raw_t.rotationMatrix[1][2], raw_t.rotationMatrix[1][1], raw_t.rotationMatrix[1][0]),
+		godot::Vector3(-raw_t.rotationMatrix[0][2], raw_t.rotationMatrix[0][1], raw_t.rotationMatrix[0][0])
+	);
+
+	t.origin = sm64_3d_to_godot(raw_t.position, scale_factor);
+
+	return t;
+}
+
 void LibSM64::mario_attack(int32_t p_mario_id, const godot::Vector3 &p_position, godot::real_t p_hitbox_height) {
 	ERR_FAIL_COND(p_mario_id < 0);
 
@@ -569,6 +588,7 @@ void LibSM64::_bind_methods() {
 	godot::ClassDB::bind_method(godot::D_METHOD("mario_kill", "mario_id"), &LibSM64::mario_kill);
 	godot::ClassDB::bind_method(godot::D_METHOD("mario_interact_cap", "mario_id", "cap_flag", "cap_time", "play_music"), &LibSM64::mario_interact_cap, DEFVAL(0.0), DEFVAL(true));
 	godot::ClassDB::bind_method(godot::D_METHOD("mario_extend_cap", "mario_id", "cap_time"), &LibSM64::mario_extend_cap);
+	godot::ClassDB::bind_method(godot::D_METHOD("mario_get_limb_transform", "mario_id", "limb_id"), &LibSM64::mario_get_limb_transform);
 	godot::ClassDB::bind_method(godot::D_METHOD("mario_attack", "mario_id", "position", "hitbox_height"), &LibSM64::mario_attack);
 
 	godot::ClassDB::bind_method(godot::D_METHOD("surface_object_create", "position", "rotation", "surfaces"), &LibSM64::surface_object_create);
