@@ -459,14 +459,8 @@ godot::Transform3D LibSM64::get_limb_transform(int32_t p_mario_id, int32_t p_lim
 	struct SM64LimbTransform raw_t;
 	sm64_get_limb_transform(p_mario_id, p_limb_id, &raw_t);
 
-	godot::Quaternion q(raw_t.rotation[0], raw_t.rotation[1], raw_t.rotation[2], raw_t.rotation[3]);
-	godot::Basis basis_s(q);
-
-	t.basis = godot::Basis(
-		godot::Vector3(basis_s[2][2], -basis_s[2][1], -basis_s[2][0]),
-		godot::Vector3(-basis_s[1][2], basis_s[1][1], basis_s[1][0]),
-		godot::Vector3(-basis_s[0][2], basis_s[0][1], basis_s[0][0])
-	);
+	godot::Quaternion q(-raw_t.rotation[2], raw_t.rotation[1], raw_t.rotation[0], raw_t.rotation[3]);
+	t.basis = godot::Basis(q);
 
 	t.origin = sm64_3d_to_godot(raw_t.position, scale_factor);
 
